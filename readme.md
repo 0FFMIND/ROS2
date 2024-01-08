@@ -14,4 +14,4 @@ First, we need to install docker to our system, https://linux.cn/article-14871-1
 and see the command: sudo docker run hello-world runs successfully.       
 Next is to install Docker Compose and follow the same tutorial above.     
 --> sudo -s --> cd compose --> docker-compose up -d reverse-proxy --> open http://localhost:8080/api/rawdata
-<img src="https://github.com/0FFMIND/Turtlebot/blob/main/20240108_DockerCompose.png">
+<img src="https://github.com/0FFMIND/TurtleBot/blob/main/20240108_DockerCompose.png">
