@@ -35,4 +35,20 @@ roscore --> Start ROS Master
 rosrun turtlesim turtlesim_node --> Start simulation      
 rosrun turtlesim turtle_teleop_key --> Start key control      
 rosrun rqt_graph rqt_graph --> Show system graph       
-<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240110_ROSTopic.png">
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240110_ROSTopic.png">     
+***
+-2023/1/11-        
+Tasks: WorkSpace customized     
+Structure of workspace:    
+src --> Source Space      
+build --> Build Space     
+devel --> Development Space    
+install --> Install Space     
+command: catkin_create_pkg <package_name> [depend1][depend2][depend3]..., Then we cd to src, and catkin_create_pkg learning_topic geometry_msgs turtlesim std_msgs rospy roscpp, then complie them use catkin_make, and add the environmental variable: source ~/catkin_ws/devel/setup.bash
+Then create .py --> touch velocity_publisher.py --> add #!/usr/bin/env python3 at the first line
+***
+-2023/1/12-     
+Tasks: Solve the problem of unexpected Trojan attack to our server      
+Detective --> Remove --> reset SSH and VNC password
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240112_Trojan.png"> 
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240112_Remove.png"> 
