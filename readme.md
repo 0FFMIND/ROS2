@@ -49,6 +49,13 @@ Then create .py --> touch velocity_publisher.py --> add #!/usr/bin/env python3 a
 ***
 -2023/1/12-     
 Tasks: Solve the problem of unexpected Trojan attack to our server      
-Detective --> Remove --> reset SSH and VNC password
+Detective --> Remove --> reset SSH and VNC password     
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240112_Trojan.png"> 
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240112_Remove.png"> 
+***
+-2023/1/16-
+Tasks: MAS (Multi Agent System) in Unity for Simulation
+Unity3D version: 2020.3.20f1c1, Unity Package: Behavior Designer - Behavior Trees for Everyone; Behavior Designer - Movement Pack        
+The blue balls are designed to move randomly using Unity AI, and the red balls have two actions: if the blue ball collide with them, the count will plus one, and if two red balls are too closer, it will move far away.     
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240116_AgenntB.png"> 
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240116_MAS.png"> 
