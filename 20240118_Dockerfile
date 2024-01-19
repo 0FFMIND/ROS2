@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+# 意味着从python3.7映像开始创建映像
+FROM python:3.7-alpine
+# 将工作目录设置为code
+WORKDIR /code
+# 设置命令使用的环境变量flask来自于app.py，host的地址为0.0.0.0
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+# 安装gcc和其他依赖项
+RUN apk add --no-cache gcc musl-dev linux-headers
+# 复制requirements.txt并安装python依赖项
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+# 向镜像添加元数据以描述容器正在监听端口5000
+EXPOSE 5000
+# 将项目中的.复制到.镜像中的workdir
+COPY . .
+# 将容器的默认命令设置为flask run
+CMD ["flask", "run"]

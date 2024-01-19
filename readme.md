@@ -53,9 +53,25 @@ Detective --> Remove --> reset SSH and VNC password
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240112_Trojan.png"> 
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240112_Remove.png"> 
 ***
--2023/1/16-
+-2023/1/16-      
 Tasks: MAS (Multi Agent System) in Unity for Simulation
 Unity3D version: 2020.3.20f1c1, Unity Package: Behavior Designer - Behavior Trees for Everyone; Behavior Designer - Movement Pack        
 The blue balls are designed to move randomly using Unity AI, and the red balls have two actions: if the blue ball collide with them, the count will plus one, and if two red balls are too closer, it will move far away.     
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240116_AgenntB.png"> 
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240116_MAS.png"> 
+***
+-2023/1/17/-      
+Tasks: Basics of Docker and Traefik      
+traefik is an edge router, when we start traefik, we need to first define entrypoints,  and based on the routes connected to these entrypoints, we need to see if these routes match a set of rules. If the rules match, then the routers we input will go through middlewares After the conversion, it is forwarded to the real services.      
+For traefik, to discover the services, we need to use connectors which are called providers because they provide the configuration to Traefik. Provider can automatically discover services on the platform, and the provider could be Docker or Kubernetes, etc.. Here we use Docker Provider for traefik configuration, and for Docker startup, we use Docker Compose here. For compose, it simplifies the control of the entire application stack, whichcan easily manage services in a single easy-to-understand YAML configuration fileThen, using a single command, you can create and start all the services from the profile. the simple example in https://docs.docker.com/compose/gettingstarted/ to run Docker Compose         
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240117_traefik.png"> 
+***
+-2023/1/18-       
+Tasks: Learn Simple Sample of Docker Compose    
+1. mkdir composetest -> cd composetest -> touch app.py ~and also~ touch requirement.txt -> add flask,redis     
+2. create Dockerfile, in same dir, touch Dockerfile, and the Dockerfile is used to create Docker Image.       
+3. touch compose.yaml -> docker compose up -> open http://localhost:8000/
+Error Message: Error response from daemon: Head "https://registry-1.docker.io/v2/library/redis/manifests/alpha": net/http: TLS handshake timeout    
+Solution: https://blog.csdn.net/qq_35606010/article/details/104750391 create deamon.json in etc/docker  -> sudo nano etc/docker/deamon.json and Solution for From ...alpine: https://www.cnblogs.com/xiaoyao404/p/14266360.html add RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories in Dockerfile      
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240118_DockerCompose.png">
+
