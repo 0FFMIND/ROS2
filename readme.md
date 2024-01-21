@@ -14,7 +14,9 @@ First, we need to install docker to our system, https://linux.cn/article-14871-1
 and see the command: sudo docker run hello-world runs successfully.       
 Next is to install Docker Compose and follow the same tutorial above.     
 --> sudo -s --> cd compose --> docker-compose up -d reverse-proxy --> open http://localhost:8080/api/rawdata
-<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240108_DockerCompose.png">      
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240108_DockerCompose.png">
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240108_ReverseProxy.webp">
+      
 ***    
 -2023/1/09-    
 Tasks: ROS Simulation      
@@ -63,7 +65,7 @@ The blue balls are designed to move randomly using Unity AI, and the red balls h
 -2023/1/17/-      
 Tasks: Basics of Docker and Traefik      
 traefik is an edge router, when we start traefik, we need to first define entrypoints,  and based on the routes connected to these entrypoints, we need to see if these routes match a set of rules. If the rules match, then the routers we input will go through middlewares After the conversion, it is forwarded to the real services.      
-For traefik, to discover the services, we need to use connectors which are called providers because they provide the configuration to Traefik. Provider can automatically discover services on the platform, and the provider could be Docker or Kubernetes, etc.. Here we use Docker Provider for traefik configuration, and for Docker startup, we use Docker Compose here. For compose, it simplifies the control of the entire application stack, whichcan easily manage services in a single easy-to-understand YAML configuration fileThen, using a single command, you can create and start all the services from the profile. the simple example in https://docs.docker.com/compose/gettingstarted/ to run Docker Compose         
+For traefik, to discover the services, we need to use connectors which are called providers because they provide the configuration to Traefik. Provider can automatically discover services on the platform, and the provider could be Docker or Kubernetes, etc.. Here we use Docker Provider for traefik configuration, and for Docker startup, we use Docker Compose here. For compose, it simplifies the control of the entire application stack, which can easily manage services in a single easy-to-understand YAML configuration fileThen, using a single command, you can create and start all the services from the profile. the simple example in https://docs.docker.com/compose/gettingstarted/ to run Docker Compose         
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240117_traefik.png"> 
 ***
 -2023/1/18-       
@@ -74,4 +76,16 @@ Tasks: Learn Simple Sample of Docker Compose
 Error Message: Error response from daemon: Head "https://registry-1.docker.io/v2/library/redis/manifests/alpha": net/http: TLS handshake timeout    
 Solution: https://blog.csdn.net/qq_35606010/article/details/104750391 create deamon.json in etc/docker  -> sudo nano etc/docker/deamon.json and Solution for From ...alpine: https://www.cnblogs.com/xiaoyao404/p/14266360.html add RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories in Dockerfile      
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240118_DockerCompose.png">
-
+***
+-2023/1/21-      
+Tasks: Simple implementation of NAT traversal    
+1. mkdir nat -> touch docker-compose.yaml -> sudo docker compose up    
+2. install cpolar in Linux -> create account -> sudo systemctl enable cpolar -> sudo systemctl start cpolar -> localhost:9200      
+3. successful! -> https://1bc0b503.r3.cpolar.cn/dashboard/      
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240121_DockerCommand.png">
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240121_nattraversal.png">
+***  
+-2023/1/22-     
+Tasks: TLS challenges for Traefik       
+1. The concern is to use https on a simple service exposed with Traefik, and TLS stands for Transport Layer Secure. TLS is often used to combine with HTTP -> https -> more secured       
+2. Shake hands mechanism for TLS -> Client sends 'Client Hello' message to Server -> Server sends 'Server Hello' message to Client, including Certificate, SercerKeyExchange, CertificateRequest, ServerHelloDone -> Client processes 'Server Hello' and sends 'ClientKeyExchange' --> Server 'Finished?' --> Exchange Data       
