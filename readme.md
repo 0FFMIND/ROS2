@@ -74,16 +74,16 @@ Tasks: Learn Simple Sample of Docker Compose
 3. touch compose.yaml -> docker compose up -> open http://localhost:8000/
 Error Message: Error response from daemon: Head "https://registry-1.docker.io/v2/library/redis/manifests/alpha": net/http: TLS handshake timeout    
 Solution: https://blog.csdn.net/qq_35606010/article/details/104750391 create deamon.json in etc/docker  -> sudo nano etc/docker/deamon.json and Solution for From ...alpine: https://www.cnblogs.com/xiaoyao404/p/14266360.html add RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories in Dockerfile      
-<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240118_DockerCompose.png">         
-***
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240118_DockerCompose.png">
+***            
 -2024/1/21-       
 Tasks: Simple implementation of NAT traversal     
 1. mkdir nat -> touch docker-compose.yaml -> sudo docker compose up       
 2. install cpolar in Linux -> create account -> sudo systemctl enable cpolar -> sudo systemctl start cpolar -> localhost:9200        
 3. successful! -> https://1bc0b503.r3.cpolar.cn/dashboard/       
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240121_DockerCommand.png">        
-<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240121_nattraversal.png"> 
-***
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240121_nattraversal.png">
+***            
 -2024/1/22-     
 Tasks: TLS challenges for Traefik       
 1. The concern is to use https on a simple service exposed with Traefik, and TLS stands for Transport Layer Secure. TLS is often used to combine with HTTP -> https -> more secured       
@@ -92,3 +92,11 @@ Tasks: TLS challenges for Traefik
 4. mkdir tls -> cd tls -> touch docker-compose.yaml -> version: "3.3" service: traefik: -> ports: 80(http)443(https)8080(dashboard) tbc.....         
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240122_StaticYaml.png"> 
 <img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240122_TraefikOperation.png"> 
+***            
+-2024/1/23/-       
+Tasks: Implement ROS Publisher and Subscriber     
+1. touch publisher_velocity.py -> init ROS node -> create rospy.Publisher('name',Twist,queue_size=10)       
+2. touch pose_subscriber.py -> init ROS node -> create rospy.Subscriber('name',Pose,poseCallback) for register callback func         
+3. run cd /home/offmind -> cd catkin_ws -> catkin_make -> source ~/catkin_ws/devel/setup.bash -> roscore ->  rosrun turtlesim turtlesim_node -> rosrun learning_topic velocity_publisher.py -> same pose_subscriber.py        
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240123_Publisher&Subscriber.png"> 
+<img src="https://github.com/0FFMIND/TurtleBot/blob/master/20240123_Simulation.png"> 
