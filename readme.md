@@ -31,6 +31,12 @@
 -2024/2/29/-       
 1.实现多车跟随系统：在单车SLAM与路径规划中进行多车领队跟随       
 2.在src中创建分别的三个文件夹：multi-robot-gazebo, multi-robot-nav, multi-robot-test, 先处理multi-robot-gazebo里面的，首先安装gazebo里面的功能包，按照turtlebot3_simulation里面的gazebo, package必要的安装包：catkin_create_pkg roscpp rospy sensor_msgs geometry_msgs nav_msgs tf gazebo_ros urdf xacro gazebo_plugins，之后在multi-robot-gazebo环境中会出现三个文件：src，CMakeLists.txt, package.xml，再在同一个文件夹中创建world和launch文件夹，其中world使用别人创建好的box_house.world，最后即在launch文件中创建三个.launch文件：multi_robot_formation.launch，one_robot.launch，turtlebot3_world.launch，运行的时候：roslaunch multi-robot-gazebo multi_robot_formation.launch，就可以在gazebo世界上看见三辆小车         
-3.其次是对multi-robot-test里面的功能包安装：catkin_create_pkg roscpp rospy geometry_msgs nav_msgs sensor_msgs std_msgs tf2 tf2_geometry_msgs tf2_ros dynamic_reconfigure        
-4.最后multi-robot-nav里面的功能包安装：catkin_create_pkg roscpp rospy actionlib amcl geometry_msgs gmapping map_server move_base move_base_msgs       
+3.下面介绍一些对ROS编译空间的概念：参考0229里面的ROSFile，里面会有CMakeLists.txt和package.xml如果使用了catkin_create_pkg指令，从最上面看，最顶层是catkin工作空间，是ROS工程中层次最高的概念，而src是源空间，用于创建功能包，CMake文件中规定了功能包的编译规则，包括指定功能包等名称，指定要生成或者要添加的库文件等，而package中定义了功能包的属性信息，包括包名，版本号，编译依赖和运行依赖，剩下的include是存放c++的头文件.h的地方，则在src中存放对应的源程序文件.cpp，而此时我们使用.py书写，意味着并不需要c++的头文件，而是存放在scripts的地方。         
+4.ROS社区最为常用的SLAM算法为gmapping算法，它根据移动机器人里程计数据和激光雷达来绘制二维的栅格化地图，而SLAM算法是属于导航之前，用于构建全局地图的，当机器人读取到gmapping算法SLAM建好的二维地图，在开始导航的时候，机器人需要判断当前位置，而AMCL，蒙特卡洛定位算法，是根据已有的地图使用粒子滤波器推算机器人的位置。到最后，move_base是获得了激光雷达，二维地图map和蒙特卡洛(amcl)的定位数据，再根据给定的目标点，实现了机器人导航。      
+
+***            
+
+-2024/3/01/-       
+1.对multi-robot-test里面的功能包安装：catkin_create_pkg roscpp rospy geometry_msgs nav_msgs sensor_msgs std_msgs tf2 tf2_geometry_msgs tf2_ros dynamic_reconfigure        
+2.最后multi-robot-nav里面的功能包安装：catkin_create_pkg roscpp rospy actionlib amcl geometry_msgs gmapping map_server move_base move_base_msgs       
 
