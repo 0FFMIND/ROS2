@@ -30,4 +30,7 @@
 
 -2024/2/29/-       
 1.实现多车跟随系统：在单车SLAM与路径规划中进行多车领队跟随       
-2.       
+2.在src中创建分别的三个文件夹：multi-robot-gazebo, multi-robot-nav, multi-robot-test, 先处理multi-robot-gazebo里面的，首先安装gazebo里面的功能包，按照turtlebot3_simulation里面的gazebo, package必要的安装包：catkin_create_pkg roscpp rospy sensor_msgs geometry_msgs nav_msgs tf gazebo_ros urdf xacro gazebo_plugins，之后在multi-robot-gazebo环境中会出现三个文件：src，CMakeLists.txt, package.xml，再在同一个文件夹中创建world和launch文件夹，其中world使用别人创建好的box_house.world，最后即在launch文件中创建三个.launch文件：multi_robot_formation.launch，one_robot.launch，turtlebot3_world.launch，运行的时候：roslaunch multi-robot-gazebo multi_robot_formation.launch，就可以在gazebo世界上看见三辆小车         
+3.其次是对multi-robot-test里面的功能包安装：catkin_create_pkg roscpp rospy geometry_msgs nav_msgs sensor_msgs std_msgs tf2 tf2_geometry_msgs tf2_ros dynamic_reconfigure        
+4.最后multi-robot-nav里面的功能包安装：catkin_create_pkg roscpp rospy actionlib amcl geometry_msgs gmapping map_server move_base move_base_msgs       
+

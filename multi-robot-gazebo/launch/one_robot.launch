@@ -1,0 +1,26 @@
+<launch>
+    <!--这里参考turtlebot3_world的launch文件，首先定义了一个机器人名称，其默认值为空字符串-->
+    <arg name="multi_robot_name" default=""/>
+    <!--下面定义机器人初始位置和四个方向的参数，直接没有赋值，只是用于定义-->
+    <arg name="init_pose_x"/>
+    <arg name="init_pose_y"/>
+    <arg name="init_pose_z"/>
+    <arg name="init_pose_a"/>
+    <!--x,y,z是机器人的坐标，而a表示此时机器人的方向角度-->
+    <!--下面进行指定model，将最开始world.launch中default直接改为值burger，不再依赖环境变量-->
+    <arg name="model" default="burger" doc="model type [burger, waffle, waffle_pi]"/>
+    <!--对于机器人，确认了模型，确认了坐标，下面需要使用指令将其部署到gazebo场景中-->
+    <arg name="init_pose" value="-x $(arg init_pose_x) -y $(arg init_pose_y) -z $(arg init_pose_z) -R 0 -P 0 -Y $(arg init_pose_a)" />
+    <!--单独的param经常用于产生command，这里robot_description里面的命令找出.xacro文件-->
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <!--node通常应用于启动功能包，而include通常用来执行.launch文件并在里面赋值-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"  output="screen" >
+    <!--这里robot的关节节点状态与机器人的TF数据均被广播出去了，下面param用于定义TF发出的频率与TF广播出去的前缀-->
+        <param name="publish_frequency" type="double" value="30.0" />
+        <param name="tf_prefix" value="$(arg multi_robot_name)" />
+    </node>
+    <!--最后启动spawn将机器人放置-->
+    <node name="spawn_turtlebot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+            args="$(arg init_pose) -urdf -param robot_description -model $(arg multi_robot_name)"/>
+</launch>

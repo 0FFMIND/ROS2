@@ -1,0 +1,23 @@
+<launch>
+    <!--这里参考turtlebot3_world的launch文件，首先设置了一个参数model，用于指定TurtleBot3机器人的模型-->
+    <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+    <!--同样参考turtlebot3_world文件，设置已有的三个参数，决定机器人的起始位置-->
+    <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.0"/>
+    <arg name="z_pos" default="0.0"/>
+    <!--这里使用gazebo_ros包中提供的命令，启动一个空世界-->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!--下面设置参数world_name，指定gazebo应该加载的世界，在此程序中，world存在于multi-robot-gazebo文件下-->
+        <arg name="world_name" value="$(find multi-robot-gazebo/world/box_house.world)"/>
+        <!--同样的设置参数,paused参数询问是否在gazebo启动时暂停，use_sim_time询问是否使用ROS模拟器的时间而非真实时间-->
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+    <!--arg用于设置参数，而param用于定义参数,通过一个命令生成，找出对应的我们指定Turtlebot3的Model-->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+    <!--最后一行，使用node开始，即启动了一个ROS节点，使用gazebo_ros包中的spawn_model类型，用来在gazebo中生成一个URDF模型-->
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf"  args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+</launch>
