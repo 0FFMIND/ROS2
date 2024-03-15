@@ -1,0 +1,25 @@
+<launch>
+    <!--launch文件头是用来发布节点的，这里给三个机器人都绑定上tf2的广播节点，用来发布其位置的坐标信息-->
+    <!--include标签用来提醒ROS要包含另外一个launch文件-->
+    <include file="$(find multi-robot-test)/launch/multi_robot_tf2.launch">
+        <arg name="robot_name" value="robot1"/>
+        <arg name="num" value="1"/>
+    </include>
+    <include file="$(find multi-robot-test)/launch/multi_robot_tf2.launch">
+        <arg name="robot_name" value="robot2"/>
+        <arg name="num" value="2"/>
+    </include>
+    <include file="$(find multi-robot-test)/launch/multi_robot_tf2.launch">
+        <arg name="robot_name" value="robot3"/>
+        <arg name="num" value="3"/>
+    </include>
+    <!--同样，下面include标签用来给slave.launch进行从属关系的绑定，并发布节点-->、
+    <include file="$(find multi-robot-test)/launch/turtlebot3_slave.launch">
+        <arg name="target_frame" value="robot1"/>
+        <arg name="source_frame" value="robot2"/>
+    </include>
+    <include file="$(find multi-robot-test)/launch/turtlebot3_slave.launch">
+        <arg name="target_frame" value="robot1"/>
+        <arg name="source_frame" value="robot3"/>
+    </include>
+</launch>

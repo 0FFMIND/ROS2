@@ -1,0 +1,11 @@
+<launch>
+    <!--该.launch文件负责将必要的三个参数，具体见tf2_broadcaster.py，设置初始化的位置-->
+    <!--robot_name用来设置机器人的名字，mode用来设置多机器人编队模式，num用来设置机器人编号-->
+    <arg name="robot_name" default="robot1"/>
+    <arg name="mode" default="triangle"/>
+    <arg name="num" default="1"/>
+    <!--使用node节点导入的脚本，首先pkg指定节点所在的包名，type指定节点运行的脚本，name用来设置节点的名字，
+    arg用来给tf2.py脚本传入参数，此时，参数变成了为键值对提供的键，最后output指节点的输出应该显示在终端屏幕上-->
+    <node pkg="multi-robot-test" type="tf2_broadcaster.py" name="$(arg robot_name)_tf2"
+    args="$(arg robot_name) $(arg mode) $(arg num)" output="screen"/>
+</launch>

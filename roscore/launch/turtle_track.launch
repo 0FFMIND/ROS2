@@ -3,17 +3,17 @@
     <node pkg="turtlesim" type="turtlesim_node" name="turtle1" output="screen"/>
     <node pkg="turtlesim" type="turtle_teleop_key" name="key_control" output="screen"/>
     <!-- 创建第二个乌龟节点，即turtle_client里面的内容，turtlesim已经启动-->
-    <node pkg="score" type="turtle_client.py" name="turtle2" output="screen"/>
+    <node pkg="roscore" type="turtle_client.py" name="turtle2" output="screen"/>
     <!-- 两个乌龟均要绑定publisher，发布对应的坐标-->
-    <node pkg="score" type="turtle_publisher.py" name="publisher1" output="screen">
+    <node pkg="roscore" type="turtle_publisher.py" name="publisher1" output="screen">
     <!-- 在turtle_publisher中要获取当前乌龟名字'~turtle'，但由于是私有变量并不能直接获取，故赋值-->
         <param name="turtle" value="turtle1"/>
     </node>
-    <node pkg="score" type="turtle_publisher.py" name="publisher2" output="screen">
+    <node pkg="roscore" type="turtle_publisher.py" name="publisher2" output="screen">
         <param name="turtle" value="turtle2"/>
     </node>
        <!-- 绑定turtle2到listener从而实现跟随操作-->
-    <node pkg="score" type="turtle_subscriber.py" name="listener" output="screen"/>
+    <node pkg="roscore" type="turtle_subscriber.py" name="listener" output="screen"/>
 
 
 
