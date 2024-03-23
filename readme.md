@@ -58,7 +58,17 @@
 6. 建立scripts文件夹 -> tf2_broadcaster.py 和 turtlebot3_slave.py书写.py脚本       
 7. 建立launch文件夹，同样创建三个launch文件：multi_robot_formation.launch，multi_robot_tf2.launch，turtlebot3_slave.launch进行书写，启动文件为multi_robot_formation.launch      
 
-#### -2024/3/17/-
+#### -2024/3/23-
+
+##### 领航者-跟随者编队(理论+实现)：
+
+1. 基于ROS的多无人车协同，对于无人车编队，主要解决两个问题，即多无人车编队队形的形成和多无人编队后形成的保持，对于编队控制，本程序的实现方法基于领航者-跟随者，这个方法的特点在于简单实现了编队控制结构，因为在编队中，仅需要设置领航者的期望路径之后跟随者跟随，这个方法的缺点在于过分依赖于领航者
+2. 对于的tf2_broadcaster.py，它在三辆小车上均运行，在launch文件书写的过程中声明新节点/robotx_tf2，在这个节点的.py运行脚本中创建一个subscriber(xxx/odom)，则订阅里程计发送的信息，在rqt_graph则两个节点在同时订阅/odom数据，一个发给/robotx_slave节点，一个发给/robotx_slave，一个发给/robotx_tf2，在tf2里面会有rospy.spin()一直执行订阅/odom后的回调函数，里面使用了功能包tf2_ros现有TransformBroadcaster()用来广播TransformStamped()信息，里面会设置当前的时间戳，并且计算当前里程计数据与预制好的三角形纵队产生的偏差，并得到当前旋转角，最后广播出去该tf
+3. 在Gazebo仿真环境中，根据现有的rqt_graph，其实现是通过了turtlebot3_slave.py的脚本，通过在.py脚本中通过import rospy库，通过launch一个节点运行该.py脚本，声明节点名字为/robotx_slave，再在主函数中通过声明rospy.subscriber(xxx/odom)，rospy.subscriber(xxx/scan)，订阅Gazebo仿真环境，将跟随者robot2、robot3的机器人定位数据发布到/robot_x/odom以及跟随者机器人上的激光数据发布到/robot_x/scan，最后回到总订阅者/robotx_slave上(查看rqt_graph)，在/odom的消息处理上，调用对应的回调函数odom_callback，通过里程计返回的信息确认当前机器人的旋转角，同样，在/scan订阅到的雷达信息，其处理时调用laser_scan_msg_callback，通过激光雷达返回的信息，得到前方障碍物距离，左边30度障碍物距离，右边30度障碍物距离，最后使用tf2_ros现有的Listener去听在tf2_broadcaster发布的广播信息，得到信息后计算离目标纵队位姿差的直线距离和角度，而获得到的/scan，/odom用来判断此时小车能否向着目标点前行/转向，最后将小车此时计算得到的线速度和角速度通过之前定义好的发布者rospy.publisher(xxx/cmd_vel)，该车的控制，实现该车的领导者-跟随算法
+4. 对rqt_graph剩下的节点，首先gazebo会在仿真的条件下输出一个/joint_state节点，而/joint_state_publisher，该节点读取无人车的robot_description参数，查找所有非固定的关节，查找完后该节点也会发布同样的/JointState，输出当前关节信息，position，velocity，effort等，最后被robot_state_publisher接受，该节点通过指定的URDF文件和从joint_states话题中获得的关节位置来计算机器人正向运动学，最终发布tf结果
+5. Warning：之前遇到了tf发布的冲突，解决方法参考：https://blog.csdn.net/FRIGIDWINTER/article/details/126291629，修改urdf.xacro文件中发布odom、wheel等的参数为false
+
+#### -2024/3/24/-
 
 ##### 小车自动寻路，全局代价和局部代价的实现：
 
@@ -73,3 +83,4 @@
 6. 常见的全局寻路算法，路径规划算法：A\*算法，Dijkstra(迪杰特斯拉)，而在move_base功能包中，算法已经在封装了，但是具体的参数需要我们自己配置，在这里使用RRT(rapidly exploring random tree)快速探索随机树作为全局路径规划，他最大的好处是快，快速扩张一群像树一样的路径以探索空间内大部分的区域，是一种对状态空间随机采用的算法，无需预知环境，通过对采样点进行碰撞检测，避免了对空间精确建模带来的巨大计算量，该算法是概率完备但非最优的，并且对于具有狭窄通道和狭窄入口的区域，RRT生长困难，探索效率低下
 7. RRT算法流程：设定初始点和目标点，再自定义采样空间M，进行随机采样Xrand，如果Xrand在障碍物内则重新采样，之后计算该采样点Xrand与集合(已经生成的节点)中所有节点之间的距离，得到离得最近的节点Xnear，再以步长从Xnear走向Xrand生成新节点Xnew，如果Xnear与Xnew的连线经过障碍物，则重新采样Xrand，如果可行，则将Xnew放入节点集合T，将Xnew的父节点设置为Xnear，依次循环，为了找到最优策略，改进方法为RRT*
 8. 在RRT的使用中会涉及到一个frontier_opencv_detector，边界点检测器，会使用OpenCV工具检测边界点，最开始实现该节点是为了与基于RRT的边界检测器进行比较，沿着RRT检测器运行该节点可以提高检测速度，配置OpenCV在CMakeLists中find_package(OpenCV REQUIRED)，之后添加头文件include_directories(${OpenCV_INCLUDE_DIRS})，此外还需要添加sophus，它的使用是依赖eigen库的，eigen库是一个用于线性运算的C++模板库，支持矩阵、矢量运算等数据分析相关的算法，sophus继承eigen库的类，支持李群和李代数的应用，李群和李代数用来描述三维世界内刚体运动的方式，可以用来相机的姿态估计，同样在CMakeLists最开头进行配置git clone https://gitclone.com/github.com/fmtlib/fmt.git，对于一些model的git clone命令参考https://blog.csdn.net/Thump123/article/details/122849998的解决方法
+9. 

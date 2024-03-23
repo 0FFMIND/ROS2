@@ -7,7 +7,7 @@
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
     <!--运行gazebo仿真环境，使用上面定义的参数，首先先启动空世界-->
-     <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <!--这里对于该仿真世界的设置，直接引用上面设置的变量值-->
         <arg name="world_name" value="$(arg world_name)"/>
         <arg name="paused" value="$(arg paused)"/>
@@ -15,9 +15,9 @@
         <arg name="gui" value="$(arg gui)"/>
         <arg name="headless" value="$(arg headless)"/>
         <arg name="debug" value="$(arg debug)"/>
-     </include>
-     <!--在include启动空世界并且赋予变量值后，下面include单个小车的launch文件，实现spawn多个小车-->
-     <group ns="robot1">
+    </include>
+    <!--在include启动空世界并且赋予变量值后，下面include单个小车的launch文件，实现spawn多个小车-->
+    <group ns="robot1">
         <!--上面group，为标签，定义了不同的命名空间，namespace，从而每个机器人可以在相同的仿真中工作-->
         <include file="$(find multi-robot-gazebo)/launch/one_robot.launch">
         <!--这里对one_robot.launch中只声明了的arg进行赋值-->
@@ -27,8 +27,8 @@
         <arg name="init_pose_a" value="0"/>
         <arg name="multi_robot_name" value="robot1"/>
         </include>
-     </group>
-        <group ns="robot2">
+    </group>
+    <group ns="robot2">
         <!--上面group，为标签，定义了不同的命名空间，namespace，从而每个机器人可以在相同的仿真中工作-->
         <include file="$(find multi-robot-gazebo)/launch/one_robot.launch">
         <!--这里对one_robot.launch中只声明了的arg进行赋值-->
@@ -38,8 +38,8 @@
         <arg name="init_pose_a" value="0"/>
         <arg name="multi_robot_name" value="robot2"/>
         </include>
-     </group>
-        <group ns="robot3">
+    </group>
+    <group ns="robot3">
         <!--上面group，为标签，定义了不同的命名空间，namespace，从而每个机器人可以在相同的仿真中工作-->
         <include file="$(find multi-robot-gazebo)/launch/one_robot.launch">
         <!--这里对one_robot.launch中只声明了的arg进行赋值-->
@@ -49,5 +49,5 @@
         <arg name="init_pose_a" value="0"/>
         <arg name="multi_robot_name" value="robot3"/>
         </include>
-     </group>
+    </group>
 </launch>

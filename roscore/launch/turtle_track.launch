@@ -14,8 +14,4 @@
     </node>
        <!-- 绑定turtle2到listener从而实现跟随操作-->
     <node pkg="roscore" type="turtle_subscriber.py" name="listener" output="screen"/>
-
-
-
-
 </launch>

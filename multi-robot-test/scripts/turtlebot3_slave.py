@@ -103,6 +103,7 @@ class Turtlebot3Drive:
         rate = rospy.Rate(50)  # 设置循环速度为50Hz
         while not rospy.is_shutdown():  # 在该ros节点没有被关闭的时候一直执行循环
             try:  # 从tf2的缓冲区获得当前robot1与robot2的坐标系变换信息
+                rate.sleep()
                 self.robot1_to_robot2 = self.tf_buffer.lookup_transform(self.source_frame, self.target_frame,
                                                                         rospy.Time(0), rospy.Duration(1))
                 # 计算两个坐标系之间的直线距离和角度信息
@@ -135,7 +136,6 @@ class Turtlebot3Drive:
                 rospy.loginfo("异常信息：%s", e)
                 rate.sleep()
                 continue
-            rate.sleep()
 
 # 入口点
 if __name__ == '__main__':

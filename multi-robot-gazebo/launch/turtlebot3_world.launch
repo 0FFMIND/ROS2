@@ -18,6 +18,6 @@
     </include>
     <!--arg用于设置参数，而param用于定义参数,通过一个命令生成，找出对应的我们指定Turtlebot3的Model-->
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-    <!--最后一行，使用node开始，即启动了一个ROS节点，使用gazebo_ros包中的spawn_model类型，用来在gazebo中生成一个URDF模型-->
+    <!--最后一行，使用node开始，启动了一个ROS节点，使用gazebo_ros包中的spawn_model类型，用来在gazebo中生成一个URDF模型-->
     <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf"  args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
 </launch>

@@ -17,7 +17,7 @@
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"  output="screen" >
     <!--这里robot的关节节点状态与机器人的TF数据均被广播出去了，下面param用于定义TF发出的频率与TF广播出去的前缀-->
-        <param name="publish_frequency" type="double" value="30.0" />
+        <param name="publish_frequency" type="double" value="50.0" />
         <param name="tf_prefix" value="$(arg multi_robot_name)" />
     </node>
     <!--最后启动spawn将机器人放置-->

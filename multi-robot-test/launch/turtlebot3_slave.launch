@@ -5,6 +5,6 @@
     <arg name="source_frame" default="robot2"/>
     <!--使用node节点导入的脚本，首先pkg指定节点所在的包名，type指定节点运行的脚本，name用来设置节点的名字，
     arg用来给slave.py脚本传入参数，最后output指节点的输出应该显示在终端屏幕上-->
-    <node pkg="multi-robot-test" type="turtlebot3_slave.py" name="slave_$(arg source_frame)"
+    <node pkg="multi-robot-test" type="turtlebot3_slave.py" name="$(arg source_frame)_slave"
     args="$(arg target_frame) $(arg source_frame)" output="screen"/>
 </launch>
