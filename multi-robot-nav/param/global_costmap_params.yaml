@@ -1,0 +1,18 @@
+global_costmap:
+  global_frame:        map # 定义代价地图应该运行的坐标系，在全局代价地图下，选择/map坐标系
+  robot_base_frame:    base_footprint # 定义机器人的基座的坐标系，这里使用机器人底座的投影，base_footprint
+  update_frequency:    1.5 # 定义代价地图更新的频率（以Hz为单位)，数值越大，计算机的CPU负担会越重，对于全局地图，通常设定一个相对较小的值，这里1.5Hz表示1秒钟更新1.5次
+  publish_frequency:   1.0 # 定义代价地图发布在Rviz可视化信息的速率（以Hz为单位），先得到前面更新后的地图，再进行更新，会比前面慢，这里1Hz代表1秒钟更新1次
+  transform_tolerance: 1 # 定义变换容忍度，考虑因缓冲延迟而过时的窗口
+  # 这里需要注意，虽然在costmap_common_params定义了通用膨胀半径，但对应到全局代价地图和局部代价地图会根据情况的不同产生差异
+  # 在通常情况下的全局路径规划，膨胀半径会设置较小，确保机器人能够通过较窄的路径，而在局部路径规划中这个radius会变大，确保机器人能够不碰到障碍物
+  inflation_radius:    0.3 # 膨胀半径，扩展在碰撞区域以外的代价区域，使得机器人规划路径避开障碍物
+  cost_scaling_factor: 10.0 # 膨胀层代价缩放因子
+  # 最后定义了代价地图需要使用的插件，static_layer处理静态地图数据，obstacle_layer处理障碍物信息，inflation_layer处理膨胀区域
+  # 最终上述的参数实现依靠插件中预先定义好的C++类，处理之后传入
+  plugins:
+    - {name: static_layer,     type: "costmap_2d::StaticLayer"}
+    - {name: obstacle_layer,   type: "costmap_2d::VoxelLayer"}
+    - {name: inflation_layer,  type: "costmap_2d::InflationLayer"}
+
+    

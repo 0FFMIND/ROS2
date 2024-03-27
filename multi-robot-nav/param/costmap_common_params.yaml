@@ -1,0 +1,30 @@
+max_obstacle_height: 2.0 # 设置障碍物层可以识别的最大高度，超过2m的障碍物则不会被考虑在内
+footprint: [[-0.105, -0.105], [-0.105, 0.105], [0.041, 0.105], [0.041, -0.105]] # burger机器人形状，从navigation包中找到burger的common_params
+
+static_layer: # 这里开始多层叠加，首先是静态地图层
+  enabled:              true # 使能静态SLAM之后得到的地图层
+  map_topic:            "map" # 静态地图层需要在哪个坐标系下运行，订阅全局地图/map
+
+obstacle_layer: # 障碍地图层，用来表示导航过程中传感器感知的障碍物信息
+  enabled:              true # 使能障碍层
+  max_obstacle_height:  2.0 # 定义雷达扫描的障碍层可以识别的最大的障碍物高度，超过不识别
+  min_obstacle_height:  0.0 # 最小高度
+  combination_method:   1 # 设置地图障碍层的参数
+  track_unknown_space:  true # 表示未知空间将被传感器追踪，地图上的未知区域也会被认为是可以被全局规划的区域
+  obstacle_range:       2.5 # 设置机器人检测障碍物的最大距离，只有距离机器人2.5m以内的障碍物才被算入影响路径规划和移动的障碍物
+  raytrace_range:       3.0 # 之前2.5m以内的障碍物被实时更新进障碍物地图，当机器人走过后，超过机器人3m以外的障碍物将会在代价地图上被清除
+  publish_voxel_map:    false # 不发布体素地图(一种三维地图的表示方法)
+  observation_sources:  scan  # 配置障碍物层的观测源，这里使用scan激光雷达进行感知操作
+  scan:
+    data_type:          LaserScan # 设置数据类型，表示该传感器为激光扫描
+    topic:              "scan" # 定义激光扫描数据的话题
+    marking:            true # 启用使用该传感器标记障碍物的功能
+    clearing:           true # 启用使用该传感器清除障碍物的功能，将清除后的空间标记为自由空间
+    expected_update_rate: 0
+
+inflation_layer: # 膨胀层，在静态地图层和障碍地图层上面进行膨胀(设置向外扩张的安全区域)，以避免机器人外壳撞上障碍物
+  enabled:              true # 使能膨胀层
+  cost_scaling_factor:  3.0  # 膨胀过程中使用到的代价比例因子
+  inflation_radius:     0.2  # 障碍物的膨胀半径，这个参数理论上越大越安全，但同样的会导致机器人无法穿过狭窄的地方，一般设置为机器人底盘的直径大小
+
+

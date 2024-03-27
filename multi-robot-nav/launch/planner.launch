@@ -1,0 +1,45 @@
+<launch>
+    <arg name="multi_robot_name" />
+    <!--对respawn的设置为false，意味着当前节点关闭后不会被重启-->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <!--rrt算法作者配置给move_base的默认参数，不做修改，实际上与后面无关，全局用的Dj，局部用的teb-->
+        <param name="footprint_padding" value="0.01" />
+        <!--单位为Hz，为发布控制命令的循环周期，路径规划器以该周期向机器人地盘发送命令-->
+        <param name="controller_frequency" value="5.0" />
+        <!--单位为s，空间清理操作执行之前，控制器等待有效控制的时间-->
+        <param name="controller_patience" value="3.0" />
+        <!--单位为s，空间清理操作执行之前，路径规划器等待有效规划的时间-->
+        <param name="planner_patience" value="1" />
+        <!--震荡有关参数-->
+        <param name="oscillation_timeout" value="30.0" />
+        <param name="oscillation_distance" value="0.5" />
+        <!--设置move_base的恢复插件列表，当move_base不能找到有效的路径规划时，将按照recovery指示的命令进行操作-->
+        <param name="recovery_behavior_enabled" value="false" />
+        <!--下面进行代价地图的配置一共会涉及到六行，先进行通用参数的配置，再进行全局地图代价、局部地图代价、控制器本身、全局路径规划、局部路径规划-->
+        <!--通用参数，launch固定写法，一个给global_costmap使用，一个给local_costmap，需要加载的通用参数包括：机器人尺寸、距离障碍物的安全距离等-->
+        <rosparam file="$(find multi-robot-nav)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find multi-robot-nav)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <!--下面global_costmap_params用来配置全局代价地图的参数-->
+        <rosparam file="$(find multi-robot-nav)/param/global_costmap_params.yaml" command="load" />
+        <!--local_costmap_params用来配置局部代价地图的参数-->
+        <rosparam file="$(find multi-robot-nav)/param/local_costmap_params.yaml" command="load" />
+        <!--move_base控制器本身的参数配置，里面会指定全局路径规划和局部路径规划的算法-->
+        <rosparam file="$(find multi-robot-nav)/param/move_base_params.yaml" command="load" />
+        <!--配置在静态全局代价地图中全局规划的算法-->
+        <rosparam file="$(find multi-robot-nav)/param/base_global_planner_params.yaml" command="load" />
+        <!--配置在局部代价代价地图中的局部规划算法-->
+        <rosparam file="$(find multi-robot-nav)/param/teb_local_planner_params.yaml" command="load" />
+        <!--通过设置~base_local_planner设置move_base的局部路径规划器的插件名，当插件为外部安装时会重新设置名字-->
+        <param name="move_base/base_local_planner" type="string" value="teb_local_planner/TebLocalPlannerROS"/>
+
+        <!--这里设置向全局代价地图和局部代价地图输入的参数均为robot1领队的坐标系和激光雷达数据-->
+        <param name="global_costmap/global_frame" value="$(arg multi_robot_name)/map"/>
+        <param name="global_costmap/robot_base_frame" value="$(arg multi_robot_name)/base_footprint"/>
+        <param name="global_costmap/scan/topic" value="/$(arg multi_robot_name)/scan"/>
+        <param name="global_costmap/obstacle_layer/scan/topic" value="/$(arg multi_robot_name)/scan"/>
+        <param name="local_costmap/global_frame" value="$(arg multi_robot_name)/odom"/>
+        <param name="local_costmap/robot_base_frame" value="$(arg multi_robot_name)/base_footprint"/>
+        <param name="local_costmap/scan/topic" value="/$(arg multi_robot_name)/scan"/>
+        <param name="local_costmap/obstacle_layer/scan/topic" value="/$(arg multi_robot_name)/scan"/>
+    </node>
+</launch>

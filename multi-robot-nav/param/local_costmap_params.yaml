@@ -1,0 +1,22 @@
+local_costmap: # 配置完global参数这是local方面的，局部代价地图，主要参数的差异来自于地图的不同
+   # 全局代价地图提供一个全局视角规划从起点到终点的路径，而局部代价地图侧重于近距离的实时笔账
+   global_frame:      map # 局部代价地图同样以全局地图作为全局坐标系
+   robot_base_frame:  base_footprint # 定义了机器人基座的坐标系为底座投影base_footprint
+   update_frequency:  5.0 # 定义局部代价地图更新的频率（以Hz为单位），局部代价地图更新会比全局代价地图更新快，以便实时避障
+   publish_frequency: 3.0 # 定义局部代价地图发布给Rviz可视化信息的速率（以Hz为单位），相较于全局的参数也变快
+   # 局部代价地图会涉及一个rolling_window(滚动窗口)的开启，这意味着局部代价地图会随着机器人移动而移动，保持机器人在中心，而全局地图是静态的，会覆盖整个环境
+   rolling_window:    true # 参数设置为true意味着当机器人移动时，保持机器人在本地代价地图中心
+   # 这里设置局部代价地图的尺寸、分辨率等
+   width:             3.0 # 局部代价地图宽度
+   height:            3.0 # 局部代价地图高度
+   resolution:        0.05 # 代价地图分辨率（米/单元格）
+   transform_tolerance: 0.5
+   # 局部代价地图通常有更大的膨胀半径系数，以避免紧急避障时的碰撞
+   inflation_radius:  0.5 # 膨胀半径，扩展在碰撞区域以外的代价区域，使得机器人规划路径避开障碍物
+   cost_scaling_factor: 3.0 # 代价比例系数，越大则代价值越小，它会影响障碍物周围代价的增长速率
+   # 在局部代价地图里，不需要处理静态地图的数据，只订阅障碍层和膨胀层
+   plugins:
+      - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
+      - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
+  
+

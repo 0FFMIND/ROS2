@@ -1,0 +1,24 @@
+<launch>
+    <!--进行参数的定义，指定小车型号，组队名字，选择SLAM算法，这里使用gmapping-->
+    <arg name="car_model" default="turtlebot3" />
+    <arg name="multi_robot_name" default="robot1" />
+    <arg name="mapping_mode" default="gmapping" />
+    <!--使用group标签开启了一个新的组，组内所有节点都会在$(arg xx)指定的命名空间运行，即组内所有的节点名称都会有这个前缀-->
+    <group ns="$(arg multi_robot_name)">
+        <!--使用include标签，运行开启SLAM/gmapping算法的launch文件，并将写入的参数值传入gmapping.launch-->
+        <include file="$(find multi-robot-nav)/launch/algorithm_gmapping.launch" if="$(eval mapping_mode == 'gmapping')">
+            <arg name="set_base_frame" value="$(arg multi_robot_name)/base_footprint" />
+            <arg name="set_odom_frame" value="$(arg multi_robot_name)/odom" />
+            <arg name="set_map_frame" value="$(arg multi_robot_name)/map" />
+        </include>
+        <!--同样，使用include标签，运行载入路径规划planner.launch文件进行有关算法的配置，同时传入参数-->
+        <include file="$(find multi-robot-nav)/launch/planner.launch">
+            <arg name="multi_robot_name" value="$(arg multi_robot_name)" />
+        </include>
+    </group>
+    <!--使用remap重映射move_base_simple/goal话题，为它加上机器人的前缀，这样不同机器人可以订阅和发布自己的话题-->
+    <!--无人车通过订阅/goal话题来获得move_base的运动规划目标-->
+    <remap from="move_base_simple/goal" to="$(arg multi_robot_name)/move_base_simple/goal" />
+    <!--启动了rviz节点，rviz为用来可视化的工具，而具体的显示配置(如何显示地图，如何显示机器人模型等)写在了multi_slam.rviz里面-->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find multi-robot-nav)/rviz/multi_slam.rviz" />
+</launch>
